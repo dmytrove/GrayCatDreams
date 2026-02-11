@@ -400,8 +400,9 @@ class FloatingCat {
         this.hitboxElement.className = 'hitbox';
 
         this.reset();
-        document.body.appendChild(this.element);
-        document.body.appendChild(this.hitboxElement);
+        const container = document.getElementById('cat-container') || document.body;
+        container.appendChild(this.element);
+        container.appendChild(this.hitboxElement);
     }
 
     _applyFilter() {

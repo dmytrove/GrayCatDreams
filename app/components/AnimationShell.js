@@ -6,6 +6,7 @@ export default function AnimationShell({ showUploadLink = true }) {
   return (
     <>
       <canvas id="stars" />
+      <div id="cat-container" />
       <div id="vignette" />
       <div className="toolbar">
         {showUploadLink && (

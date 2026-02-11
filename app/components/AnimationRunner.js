@@ -19,7 +19,7 @@ export default function AnimationRunner({ imageSources = null, settings = null, 
   return (
     <>
       <Script
-        src="https://cdn.jsdelivr.net/npm/lil-gui@0.18.2/dist/lil-gui.umd.min.js"
+        src="/js/lil-gui.umd.min.js"
         strategy="beforeInteractive"
       />
       <Script
