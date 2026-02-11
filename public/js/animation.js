@@ -750,9 +750,10 @@ function takeScreenshot(manager) {
 }
 
 // ===========================================================================
-// GUI
+// GUI (optional: only when lil-gui is loaded, e.g. via script tag)
 // ===========================================================================
 function setupGUI(manager) {
+    if (typeof lil === 'undefined') return null;
     const gui = new lil.GUI();
     gui.close();
 
