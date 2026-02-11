@@ -229,12 +229,25 @@ export default function UploadForm() {
 
       {result && (
         <div className="result">
-          <div>Share this link:</div>
-          <a href={result.url} target="_blank" rel="noopener noreferrer">
-            {result.url}
-          </a>
+          {result.adminUrl && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontWeight: 600, marginBottom: 4 }}>Admin link (bookmark this!):</div>
+              <a href={result.adminUrl} target="_blank" rel="noopener noreferrer">
+                {result.adminUrl}
+              </a>
+              <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 4 }}>
+                Use this link to customize settings. Only you have this link.
+              </div>
+            </div>
+          )}
+          <div>
+            <div style={{ marginBottom: 4 }}>Share link:</div>
+            <a href={result.url} target="_blank" rel="noopener noreferrer">
+              {result.url}
+            </a>
+          </div>
           <div className="open-btn">
-            <a href={result.url} className="btn-primary" style={{ display: "inline-block", marginTop: 8 }}>
+            <a href={result.adminUrl || result.url} className="btn-primary" style={{ display: "inline-block", marginTop: 8 }}>
               Open dream
             </a>
           </div>

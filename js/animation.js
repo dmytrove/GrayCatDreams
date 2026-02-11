@@ -1,4 +1,36 @@
 // ===========================================================================
+// Settings persistence helpers
+// ===========================================================================
+const SETTINGS_KEYS = [
+    'minCats', 'maxCats', 'baseSpeed', 'theme',
+    'gravity', 'bounciness', 'collisionRadius', 'attractionForce', 'orbitDistance',
+    'dvdMode', 'dvdSpeed', 'mouseMode',
+    'glowEnabled', 'glowIntensity', 'trailsEnabled', 'constellations',
+    'breathing', 'shootingStars', 'vignette', 'spinDrift', 'depthEffect', 'slowMoRadius',
+    'soundEnabled', 'ambientMusic',
+];
+
+function applySettings(settings) {
+    if (!settings || typeof settings !== 'object') return;
+    for (const key of SETTINGS_KEYS) {
+        if (key in settings) {
+            const v = settings[key];
+            const t = typeof v;
+            if (t === 'string' || t === 'number' || t === 'boolean') {
+                config[key] = v;
+            }
+        }
+    }
+    if (settings.theme) applyTheme(settings.theme);
+}
+
+function extractSettings() {
+    const out = {};
+    for (const key of SETTINGS_KEYS) out[key] = config[key];
+    return out;
+}
+
+// ===========================================================================
 // Config
 // ===========================================================================
 const config = {
@@ -750,9 +782,49 @@ function takeScreenshot(manager) {
 }
 
 // ===========================================================================
-// GUI
+// Save button for admin mode
 // ===========================================================================
-function setupGUI(manager) {
+function createSaveButton(gui, dreamId, adminToken) {
+    const obj = { save() {
+        const btn = gui.domElement.querySelector('.save-btn');
+        if (btn) { btn.textContent = 'Saving...'; btn.disabled = true; }
+        fetch(`/api/dream/${dreamId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ admin: adminToken, settings: extractSettings() }),
+        })
+        .then(r => {
+            if (!r.ok) throw new Error('Save failed');
+            if (btn) { btn.textContent = 'Saved!'; btn.classList.add('saved'); }
+            setTimeout(() => {
+                if (btn) { btn.textContent = 'Save Settings'; btn.disabled = false; btn.classList.remove('saved'); }
+            }, 2000);
+        })
+        .catch(() => {
+            if (btn) { btn.textContent = 'Error'; btn.classList.add('error'); }
+            setTimeout(() => {
+                if (btn) { btn.textContent = 'Save Settings'; btn.disabled = false; btn.classList.remove('error'); }
+            }, 2000);
+        });
+    }};
+    const ctrl = gui.add(obj, 'save').name('Save Settings');
+    // Tag the button element for styling
+    const btnEl = ctrl.domElement.querySelector('.function');
+    if (btnEl) btnEl.classList.add('save-btn');
+}
+
+// ===========================================================================
+// GUI (optional: only when lil-gui is loaded, e.g. via script tag)
+// ===========================================================================
+function setupGUI(manager, options) {
+    if (typeof lil === 'undefined') return null;
+
+    const isDreamPage = document.body.getAttribute('data-page') === 'dream' || /^\/dream\//.test(window.location.pathname);
+    const adminMode = !!(options && options.adminMode);
+
+    // On dream pages, only show GUI in admin mode
+    if (isDreamPage && !adminMode) return null;
+
     const gui = new lil.GUI();
     gui.close();
 
@@ -799,6 +871,11 @@ function setupGUI(manager) {
         v ? sound.startAmbient() : sound.stopAmbient();
     });
 
+    // Add save button in admin mode
+    if (adminMode && options.dreamId && options.adminToken) {
+        createSaveButton(gui, options.dreamId, options.adminToken);
+    }
+
     return gui;
 }
 
@@ -816,9 +893,12 @@ function initAnimation(options) {
     // Clean up previous init if re-called
     if (_animCleanup) _animCleanup();
 
+    // Apply saved settings before creating objects
+    if (options?.settings) applySettings(options.settings);
+
     applyBackground(config.backgroundColor);
     const catManager = new CatManager(options);
-    const gui = setupGUI(catManager);
+    const gui = setupGUI(catManager, options);
 
     const vignetteEl = document.getElementById('vignette');
     if (vignetteEl) vignetteEl.style.opacity = config.vignette ? '1' : '0';

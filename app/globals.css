@@ -59,6 +59,24 @@ body {
   overflow-y: auto;
 }
 
+.lil-gui .save-btn {
+  background: #6c8 !important;
+  color: #111 !important;
+  font-weight: 600 !important;
+  transition: background 0.3s, color 0.3s;
+}
+.lil-gui .save-btn:hover {
+  background: #7d9 !important;
+}
+.lil-gui .save-btn.saved {
+  background: #4a4 !important;
+  color: #fff !important;
+}
+.lil-gui .save-btn.error {
+  background: #e55 !important;
+  color: #fff !important;
+}
+
 .toolbar {
   position: fixed;
   bottom: 16px;

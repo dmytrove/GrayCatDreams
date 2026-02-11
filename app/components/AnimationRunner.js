@@ -3,7 +3,7 @@
 import Script from "next/script";
 import { useEffect, useState, useRef } from "react";
 
-export default function AnimationRunner({ imageSources = null }) {
+export default function AnimationRunner({ imageSources = null, settings = null, adminMode = false, dreamId = null, adminToken = null }) {
   const [scriptReady, setScriptReady] = useState(false);
   const inited = useRef(false);
 
@@ -13,8 +13,8 @@ export default function AnimationRunner({ imageSources = null }) {
     if (!scriptReady || typeof window.initAnimation !== "function") return;
     if (inited.current) return;
     inited.current = true;
-    window.initAnimation({ imageSources });
-  }, [scriptReady, imageSources]);
+    window.initAnimation({ imageSources, settings, adminMode, dreamId, adminToken });
+  }, [scriptReady, imageSources, settings, adminMode, dreamId, adminToken]);
 
   return (
     <>

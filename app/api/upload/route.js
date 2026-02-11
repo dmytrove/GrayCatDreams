@@ -37,6 +37,7 @@ export async function POST(request) {
     }
 
     const id = nanoid(8);
+    const adminToken = nanoid(16);
     const imageUrls = [];
 
     for (let i = 0; i < buffers.length; i++) {
@@ -52,13 +53,14 @@ export async function POST(request) {
     const dreamUrl = `${base.replace(/\/$/, "")}/dream/${id}`;
     const createdAt = new Date().toISOString();
 
-    await put(`${id}/manifest.json`, JSON.stringify({ id, imageUrls, createdAt }), {
+    await put(`${id}/manifest.json`, JSON.stringify({ id, imageUrls, createdAt, adminToken }), {
       access: "public",
       contentType: "application/json",
       addRandomSuffix: false,
     });
 
-    return Response.json({ id, url: dreamUrl, imageUrls, createdAt }, { status: 201, headers });
+    const adminUrl = `${dreamUrl}?admin=${adminToken}`;
+    return Response.json({ id, url: dreamUrl, adminUrl, imageUrls, createdAt }, { status: 201, headers });
   } catch (err) {
     if (err instanceof SyntaxError) {
       return Response.json({ error: "Invalid JSON body" }, { status: 400, headers: { ...headers } });
