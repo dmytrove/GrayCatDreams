@@ -1,0 +1,282 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(ellipse at center, #3a3a4a 0%, #1a1a2e 50%, #0d0d1a 100%);
+}
+
+#stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.floating-cat {
+  position: fixed;
+  pointer-events: none;
+  transition: opacity 1s ease-in-out;
+  transform-origin: center center;
+  will-change: transform;
+  max-width: 200px;
+  max-height: 200px;
+  z-index: 2;
+}
+
+.hitbox {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  box-shadow: inset 0 0 180px 60px rgba(0, 0, 0, 0.55);
+  transition: opacity 0.5s;
+}
+
+.lil-gui.autoPlace {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.lil-gui .save-btn {
+  background: #6c8 !important;
+  color: #111 !important;
+  font-weight: 600 !important;
+  transition: background 0.3s, color 0.3s;
+}
+.lil-gui .save-btn:hover {
+  background: #7d9 !important;
+}
+.lil-gui .save-btn.saved {
+  background: #4a4 !important;
+  color: #fff !important;
+}
+.lil-gui .save-btn.error {
+  background: #e55 !important;
+  color: #fff !important;
+}
+
+.toolbar {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 999;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.toolbar button {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.5);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+  backdrop-filter: blur(4px);
+}
+
+.toolbar button:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.toolbar a {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: background 0.2s, color 0.2s;
+}
+
+.toolbar a:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+#hint {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+/* Upload page */
+.upload-page {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #1a1a2e;
+  color: rgba(255, 255, 255, 0.9);
+  min-height: 100vh;
+  padding: 24px;
+}
+.upload-page h1 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+.upload-page p {
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 24px;
+  font-size: 14px;
+}
+.upload-page .drop-zone {
+  border: 2px dashed rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.03);
+  margin-bottom: 24px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.upload-page .drop-zone.dragover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+}
+.upload-page .drop-zone label {
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+}
+.upload-page .preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.upload-page .preview-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+}
+.upload-page .preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.upload-page .preview-item .status {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 4px;
+  font-size: 11px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+}
+.upload-page .preview-item .remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+.upload-page .progress-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.upload-page .progress-bar div {
+  height: 100%;
+  background: #6c8;
+  width: 0%;
+  transition: width 0.2s;
+}
+.upload-page .actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.upload-page button,
+.upload-page .btn-primary {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, background 0.2s;
+  text-decoration: none;
+  color: #111;
+  background: #6c8;
+}
+.upload-page button:disabled,
+.upload-page .btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.upload-page .btn-primary:hover:not(:disabled) {
+  background: #7d9;
+}
+.upload-page .result {
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(108, 204, 136, 0.15);
+  border-radius: 8px;
+  border: 1px solid rgba(108, 204, 136, 0.3);
+}
+.upload-page .result a {
+  color: #6c8;
+  word-break: break-all;
+}
+.upload-page .error {
+  color: #e66;
+  margin-top: 8px;
+  font-size: 14px;
+}
+.upload-page .back {
+  margin-bottom: 16px;
+}
+.upload-page .back a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-size: 14px;
+}
+.upload-page .back a:hover {
+  color: #fff;
+}
